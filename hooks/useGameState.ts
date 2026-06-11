@@ -5,6 +5,7 @@ import {
   PLAY_ORDER,
   PLAYER_COLORS,
   ballPoints,
+  canScorePottedBall,
   checkWinner,
   computePlayerStatuses,
   nextActivePlayer,
@@ -202,7 +203,12 @@ function reducer(state: GameState, action: GameAction): GameState {
       let log = previous.log;
 
       if (action.action === "pot") {
-        if (action.ball !== currentBall) return state;
+        if (
+          currentBall === undefined ||
+          !canScorePottedBall(action.ball, currentBall)
+        ) {
+          return state;
+        }
 
         const delta = ballPoints(action.ball);
         players = updatePlayerScore(players, currentPlayerIndex, delta);

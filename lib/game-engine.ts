@@ -21,6 +21,10 @@ export function ballPoints(ball: number): number {
   return 0;
 }
 
+export function canScorePottedBall(ball: number, currentBall: number): boolean {
+  return ball === currentBall || ballPoints(ball) > ballPoints(currentBall);
+}
+
 export function tableSum(balls: number[]): number {
   return balls.reduce((sum, ball) => sum + ballPoints(ball), 0);
 }

@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CircleCheck, CircleX, Minus, X } from "lucide-react";
 import { Ball } from "@/components/ui/Ball";
 import { Button } from "@/components/ui/Button";
-import { ballPoints } from "@/lib/game-engine";
+import { ballPoints, canScorePottedBall } from "@/lib/game-engine";
 import type { ActionHint, ActionType, Player } from "@/lib/types";
 
 interface ActionPanelProps {
@@ -29,7 +29,15 @@ export function ActionPanel({
 
   const selectedPoints = ball === null ? 0 : ballPoints(ball);
   const currentPoints = currentBall === null ? 0 : ballPoints(currentBall);
-  const canPot = ball !== null && ball === currentBall;
+  const canPot =
+    ball !== null &&
+    currentBall !== null &&
+    canScorePottedBall(ball, currentBall);
+  const isHigherValuePot =
+    canPot &&
+    ball !== null &&
+    currentBall !== null &&
+    ball !== currentBall;
   const showWrongBall = ball !== null && currentBall !== null && ball !== currentBall;
 
   return (
@@ -62,6 +70,9 @@ export function ActionPanel({
                 {showWrongBall && (
                   <p className="mt-1 text-xs text-amber-200">
                     Current ball is {currentBall}
+                    {isHigherValuePot
+                      ? ` - play it first to score ball ${ball}`
+                      : ""}
                   </p>
                 )}
               </div>
