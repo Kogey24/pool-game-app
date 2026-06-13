@@ -241,11 +241,7 @@ function reducer(state: GameState, action: GameAction): GameState {
       }
 
       if (action.action === "draw") {
-        const removedBall =
-          action.ball === currentBall
-            ? ballsOnTable.filter((ball) => ball !== action.ball)
-            : ballsOnTable;
-        ballsOnTable = removedBall;
+        ballsOnTable = ballsOnTable.filter((ball) => ball !== action.ball);
         log = addLog(previous, `draw on ball ${action.ball}`, 0);
         currentPlayerIndex = endTurn({ ...previous, ballsOnTable }, players);
         turnPoints = 0;
