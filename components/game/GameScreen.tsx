@@ -11,7 +11,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { RotateCcw, Undo2 } from "lucide-react";
+import { Flag, RotateCcw, Undo2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ActionPanel } from "@/components/ui/ActionPanel";
 import { Ball } from "@/components/ui/Ball";
@@ -55,7 +55,10 @@ export function GameScreen({
     return state.players[index]?.score ?? 0;
   }, [state.currentPlayerIndex, state.players]);
 
-  function selectBall(ball: number, hint: "pot" | "foul" | null = null) {
+  function selectBall(
+    ball: number,
+    hint: "pot" | "foul" | "draw" | null = null,
+  ) {
     dispatch({ type: "SELECT_BALL", ball, hint });
   }
 
@@ -70,13 +73,24 @@ export function GameScreen({
     setDraggingBall(null);
 
     if (typeof ball !== "number") return;
-    if (zone === "pot") selectBall(ball, "pot");
+    if (zone === "pot") {
+      dispatch({ type: "CONFIRM_ACTION", action: "pot", ball });
+    }
+    if (zone === "draw") {
+      dispatch({ type: "CONFIRM_ACTION", action: "draw", ball });
+    }
     if (zone === "foul") selectBall(ball, "foul");
   }
 
   function newGame() {
     if (window.confirm("Start a new game? Current progress will be cleared.")) {
       dispatch({ type: "NEW_GAME" });
+    }
+  }
+
+  function endGame() {
+    if (window.confirm("End this game now and declare the current leader?")) {
+      dispatch({ type: "END_GAME" });
     }
   }
 
@@ -108,6 +122,13 @@ export function GameScreen({
             onClick={newGame}
             size="icon"
             variant="ghost"
+          />
+          <Button
+            aria-label="End game"
+            icon={<Flag aria-hidden className="h-4 w-4" />}
+            onClick={endGame}
+            size="icon"
+            variant="amber"
           />
         </div>
       </div>
@@ -143,12 +164,14 @@ export function GameScreen({
             <TableArea
               balls={state.ballsOnTable}
               currentBall={currentBall}
+              onRemoveBall={(ball) => dispatch({ type: "REMOVE_BALL", ball })}
               onSelectBall={(ball) => selectBall(ball)}
               pointsOnTable={pointsOnTable}
             />
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <DropZone id="pot" />
+              <DropZone id="draw" />
               <DropZone id="foul" />
             </div>
 

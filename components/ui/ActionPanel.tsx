@@ -39,6 +39,7 @@ export function ActionPanel({
     currentBall !== null &&
     ball !== currentBall;
   const showWrongBall = ball !== null && currentBall !== null && ball !== currentBall;
+  const showFoulOptions = hint === "foul";
 
   return (
     <AnimatePresence>
@@ -65,7 +66,7 @@ export function ActionPanel({
                   Ball {ball} - {selectedPoints} marks
                 </p>
                 <p className="truncate text-sm text-pool-muted">
-                  {player.name} - what happened?
+                  {player.name} - {showFoulOptions ? "which foul?" : "what happened?"}
                 </p>
                 {showWrongBall && (
                   <p className="mt-1 text-xs text-amber-200">
@@ -86,15 +87,17 @@ export function ActionPanel({
             </div>
 
             <div className="grid gap-2">
-              <Button
-                className={hint === "pot" ? "ring-2 ring-white/20" : undefined}
-                disabled={!canPot}
-                icon={<CircleCheck aria-hidden className="h-4 w-4" />}
-                onClick={() => onConfirm("pot", ball)}
-                variant="primary"
-              >
-                +{selectedPoints} marks Potted cleanly
-              </Button>
+              {!showFoulOptions && (
+                <Button
+                  className={hint === "pot" ? "ring-2 ring-white/20" : undefined}
+                  disabled={!canPot}
+                  icon={<CircleCheck aria-hidden className="h-4 w-4" />}
+                  onClick={() => onConfirm("pot", ball)}
+                  variant="primary"
+                >
+                  +{selectedPoints} marks Potted cleanly
+                </Button>
+              )}
 
               <Button
                 className={hint === "foul" ? "ring-2 ring-white/20" : undefined}
@@ -115,13 +118,16 @@ export function ActionPanel({
                 </Button>
               )}
 
-              <Button
-                icon={<Minus aria-hidden className="h-4 w-4" />}
-                onClick={() => onConfirm("draw", ball)}
-                variant="secondary"
-              >
-                Draw - no score change
-              </Button>
+              {!showFoulOptions && (
+                <Button
+                  className={hint === "draw" ? "ring-2 ring-white/20" : undefined}
+                  icon={<Minus aria-hidden className="h-4 w-4" />}
+                  onClick={() => onConfirm("draw", ball)}
+                  variant="secondary"
+                >
+                  Draw - no score change
+                </Button>
+              )}
             </div>
           </motion.section>
         </motion.div>

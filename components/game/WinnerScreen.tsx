@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Trophy } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import type { GameAction } from "@/hooks/useGameState";
+import { checkWinner } from "@/lib/game-engine";
 import type { GameState } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +17,12 @@ export function WinnerScreen({ state, dispatch }: WinnerScreenProps) {
   const reduceMotion = useReducedMotion();
   const winner = state.winnerIndex === null ? null : state.players[state.winnerIndex];
   const ranked = [...state.players].sort((a, b) => b.score - a.score);
+  const confirmedWinnerIndex = checkWinner(
+    state.players,
+    state.ballsOnTable,
+    state.currentPlayerIndex,
+  );
+  const endedEarly = confirmedWinnerIndex !== state.winnerIndex;
 
   if (!winner) return null;
 
@@ -35,7 +42,8 @@ export function WinnerScreen({ state, dispatch }: WinnerScreenProps) {
           {winner.name} wins!
         </h1>
         <p className="mt-3 text-sm text-pool-muted">
-          Final score: {winner.score} marks - unbeatable
+          Final score: {winner.score} marks
+          {endedEarly ? " - game ended early" : " - unbeatable"}
         </p>
       </div>
 

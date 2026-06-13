@@ -26,7 +26,7 @@ export type ActionType =
   | "draw"
   | "miss";
 
-export type ActionHint = "pot" | "foul" | null;
+export type ActionHint = "pot" | "foul" | "draw" | null;
 
 export interface SerializedGameState {
   screen: GameScreen;

@@ -8,6 +8,7 @@ import {
   canScorePottedBall,
   checkWinner,
   computePlayerStatuses,
+  leaderIndex,
   nextActivePlayer,
   tableSum,
   toInitials,
@@ -26,9 +27,11 @@ export type GameAction =
   | { type: "START_GAME"; players: { name: string }[] }
   | { type: "SELECT_BALL"; ball: number; hint?: ActionHint }
   | { type: "CONFIRM_ACTION"; action: ActionType; ball: number }
+  | { type: "REMOVE_BALL"; ball: number }
   | { type: "CANCEL_ACTION" }
   | { type: "MISS" }
   | { type: "UNDO" }
+  | { type: "END_GAME" }
   | { type: "NEW_GAME" }
   | { type: "RESTORE"; state: SerializedGameState };
 
@@ -270,6 +273,41 @@ function reducer(state: GameState, action: GameAction): GameState {
         turnPoints: 0,
         log: addLog(previous, "missed", 0),
       });
+    }
+
+    case "REMOVE_BALL": {
+      if (state.screen !== "game" || !state.ballsOnTable.includes(action.ball)) {
+        return state;
+      }
+
+      const previous = pushHistory(state);
+      const ballsOnTable = previous.ballsOnTable.filter(
+        (ball) => ball !== action.ball,
+      );
+
+      return finishUpdate({
+        ...previous,
+        ballsOnTable,
+        log: addLog(previous, `removed ball ${action.ball} from rack`, 0),
+      });
+    }
+
+    case "END_GAME": {
+      if (state.screen !== "game") return state;
+
+      const previous = pushHistory(state);
+      const winnerIndex = leaderIndex(
+        previous.players,
+        previous.currentPlayerIndex,
+      );
+
+      return {
+        ...previous,
+        screen: "winner",
+        winnerIndex,
+        pendingBall: null,
+        pendingActionHint: null,
+      };
     }
 
     case "UNDO": {
