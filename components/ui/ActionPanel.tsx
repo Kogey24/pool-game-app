@@ -33,11 +33,6 @@ export function ActionPanel({
     ball !== null &&
     currentBall !== null &&
     canScorePottedBall(ball, currentBall);
-  const isHigherValuePot =
-    canPot &&
-    ball !== null &&
-    currentBall !== null &&
-    ball !== currentBall;
   const showWrongBall = ball !== null && currentBall !== null && ball !== currentBall;
   const showFoulOptions = hint === "foul";
 
@@ -71,9 +66,6 @@ export function ActionPanel({
                 {showWrongBall && (
                   <p className="mt-1 text-xs text-amber-200">
                     Current ball is {currentBall}
-                    {isHigherValuePot
-                      ? ` - play it first to score ball ${ball}`
-                      : ""}
                   </p>
                 )}
               </div>
