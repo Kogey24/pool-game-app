@@ -20,7 +20,6 @@ import { DropZone } from "@/components/ui/DropZone";
 import { GameLog } from "@/components/ui/GameLog";
 import { PlayerCard } from "@/components/ui/PlayerCard";
 import { TableArea } from "@/components/ui/TableArea";
-import { TurnBanner } from "@/components/ui/TurnBanner";
 import { leaderIndex } from "@/lib/game-engine";
 import type { GameAction } from "@/hooks/useGameState";
 import type { GameState, PlayerWithStatus } from "@/lib/types";
@@ -135,12 +134,6 @@ export function GameScreen({
 
       <div className="grid gap-4 lg:grid-cols-[minmax(320px,0.9fr)_minmax(420px,1.1fr)] lg:items-start">
         <section className="grid gap-3">
-          <TurnBanner
-            currentBall={currentBall}
-            player={currentPlayer}
-            turnPoints={state.turnPoints}
-          />
-
           <div className="grid gap-2">
             {statuses.map((player, index) => (
               <PlayerCard
