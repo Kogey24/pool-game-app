@@ -169,7 +169,7 @@ export function GameScreen({
               pointsOnTable={pointsOnTable}
             />
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               <DropZone id="pot" />
               <DropZone id="draw" />
               <DropZone id="foul" />

@@ -20,7 +20,7 @@ export function DropZone({ id }: DropZoneProps) {
     <div
       ref={setNodeRef}
       className={cn(
-        "min-h-[116px] flex-1 rounded-xl border-2 border-dashed p-4 transition",
+        "min-h-[116px] flex-1 rounded-xl border-2 border-dashed px-2 py-3 transition sm:p-4",
         isPot && "border-accent-green bg-accent-green/10 text-accent-lime",
         isFoul && "border-accent-red bg-red-500/10 text-red-100",
         id === "draw" && "border-pool-border bg-pool-card text-pool-text",
@@ -30,15 +30,18 @@ export function DropZone({ id }: DropZoneProps) {
         isOver && id === "draw" && "bg-white/10",
       )}
     >
-      <div className="flex h-full flex-col justify-between gap-3">
-        <div className="flex items-start gap-2">
-          <Icon aria-hidden className="mt-0.5 h-5 w-5 shrink-0" />
-          <div>
+      <div className="flex h-full flex-col items-center justify-between gap-3 text-center sm:items-stretch sm:text-left">
+        <div className="flex flex-col items-center gap-1 sm:flex-row sm:items-start sm:gap-2">
+          <Icon aria-hidden className="h-5 w-5 shrink-0 sm:mt-0.5" />
+          <div className="min-w-0">
             <p className="text-sm font-semibold">{label}</p>
             <p className="text-xs text-pool-muted">{detail}</p>
           </div>
         </div>
-        <p className="text-xs text-pool-muted">drag ball here</p>
+        <p className="text-xs leading-tight text-pool-muted">
+          <span className="sm:hidden">drag here</span>
+          <span className="hidden sm:inline">drag ball here</span>
+        </p>
       </div>
     </div>
   );
